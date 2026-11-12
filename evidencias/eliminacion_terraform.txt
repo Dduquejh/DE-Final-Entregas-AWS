@@ -1,0 +1,290 @@
+aws_glue_catalog_database.entregas: Refreshing state... [id=573992724610:mensajeria_entregas]
+aws_s3_bucket.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_ownership_controls.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_server_side_encryption_configuration.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_public_access_block.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_athena_workgroup.entregas: Refreshing state... [id=wg-entregas]
+aws_glue_catalog_table.entregas: Refreshing state... [id=573992724610:mensajeria_entregas:intentos_entrega]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_athena_workgroup.entregas will be destroyed
+  - resource "aws_athena_workgroup" "entregas" {
+      - arn           = "arn:aws:athena:us-east-1:573992724610:workgroup/wg-entregas" -> null
+      - description   = "Workgroup para las consultas del ejercicio de entregas" -> null
+      - force_destroy = true -> null
+      - id            = "wg-entregas" -> null
+      - name          = "wg-entregas" -> null
+      - region        = "us-east-1" -> null
+      - state         = "ENABLED" -> null
+      - tags          = {} -> null
+      - tags_all      = {
+          - "Gestion"  = "terraform"
+          - "Proyecto" = "partition-projection-entregas"
+        } -> null
+
+      - configuration {
+          - bytes_scanned_cutoff_per_query          = 0 -> null
+          - enable_minimum_encryption_configuration = false -> null
+          - enforce_workgroup_configuration         = true -> null
+          - publish_cloudwatch_metrics_enabled      = true -> null
+          - requester_pays_enabled                  = false -> null
+            # (1 unchanged attribute hidden)
+
+          - engine_version {
+              - effective_engine_version = "Athena engine version 3" -> null
+              - selected_engine_version  = "AUTO" -> null
+            }
+
+          - result_configuration {
+              - output_location       = "s3://de-final-entregas-aws/resultados-athena/" -> null
+                # (1 unchanged attribute hidden)
+
+              - encryption_configuration {
+                  - encryption_option = "SSE_S3" -> null
+                    # (1 unchanged attribute hidden)
+                }
+            }
+        }
+    }
+
+  # aws_glue_catalog_database.entregas will be destroyed
+  - resource "aws_glue_catalog_database" "entregas" {
+      - arn          = "arn:aws:glue:us-east-1:573992724610:database/mensajeria_entregas" -> null
+      - catalog_id   = "573992724610" -> null
+      - description  = "Base de datos del ejercicio de intentos de entrega con partition projection" -> null
+      - id           = "573992724610:mensajeria_entregas" -> null
+      - name         = "mensajeria_entregas" -> null
+      - parameters   = {} -> null
+      - region       = "us-east-1" -> null
+      - tags         = {} -> null
+      - tags_all     = {
+          - "Gestion"  = "terraform"
+          - "Proyecto" = "partition-projection-entregas"
+        } -> null
+        # (1 unchanged attribute hidden)
+
+      - create_table_default_permission {
+          - permissions = [
+              - "ALL",
+            ] -> null
+
+          - principal {
+              - data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS" -> null
+            }
+        }
+    }
+
+  # aws_glue_catalog_table.entregas will be destroyed
+  - resource "aws_glue_catalog_table" "entregas" {
+      - arn                = "arn:aws:glue:us-east-1:573992724610:table/mensajeria_entregas/intentos_entrega" -> null
+      - catalog_id         = "573992724610" -> null
+      - database_name      = "mensajeria_entregas" -> null
+      - description        = "Intentos de entrega diarios en CSV, particionados por fecha (proyección)" -> null
+      - id                 = "573992724610:mensajeria_entregas:intentos_entrega" -> null
+      - name               = "intentos_entrega" -> null
+      - parameters         = {
+          - "EXTERNAL"                       = "TRUE"
+          - "classification"                 = "csv"
+          - "projection.enabled"             = "true"
+          - "projection.fecha.format"        = "yyyy-MM-dd"
+          - "projection.fecha.interval"      = "1"
+          - "projection.fecha.interval.unit" = "DAYS"
+          - "projection.fecha.range"         = "2026-10-01,2026-10-03"
+          - "projection.fecha.type"          = "date"
+          - "skip.header.line.count"         = "1"
+          - "storage.location.template"      = "s3://de-final-entregas-aws/entregas/fecha=${fecha}/"
+        } -> null
+      - region             = "us-east-1" -> null
+      - retention          = 0 -> null
+      - table_type         = "EXTERNAL_TABLE" -> null
+        # (3 unchanged attributes hidden)
+
+      - partition_keys {
+          - comment    = "Fecha del archivo (carpeta fecha=yyyy-MM-dd), no es columna del CSV" -> null
+          - name       = "fecha" -> null
+          - parameters = {} -> null
+          - type       = "string" -> null
+        }
+
+      - storage_descriptor {
+          - additional_locations      = [] -> null
+          - bucket_columns            = [] -> null
+          - compressed                = false -> null
+          - input_format              = "org.apache.hadoop.mapred.TextInputFormat" -> null
+          - location                  = "s3://de-final-entregas-aws/entregas/" -> null
+          - number_of_buckets         = 0 -> null
+          - output_format             = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat" -> null
+          - parameters                = {} -> null
+          - stored_as_sub_directories = false -> null
+
+          - columns {
+              - comment    = "Identificador único del envío" -> null
+              - name       = "id_envio" -> null
+              - parameters = {} -> null
+              - type       = "string" -> null
+            }
+          - columns {
+              - comment    = "Ciudad del intento de entrega" -> null
+              - name       = "ciudad" -> null
+              - parameters = {} -> null
+              - type       = "string" -> null
+            }
+          - columns {
+              - comment    = "Transportadora responsable" -> null
+              - name       = "transportadora" -> null
+              - parameters = {} -> null
+              - type       = "string" -> null
+            }
+          - columns {
+              - comment    = "entregado, destinatario_ausente o direccion_incorrecta" -> null
+              - name       = "estado" -> null
+              - parameters = {} -> null
+              - type       = "string" -> null
+            }
+          - columns {
+              - comment    = "Duración en minutos; 0 para intentos fallidos" -> null
+              - name       = "duracion_minutos" -> null
+              - parameters = {} -> null
+              - type       = "int" -> null
+            }
+
+          - ser_de_info {
+              - name                  = "csv-lazy-simple" -> null
+              - parameters            = {
+                  - "field.delim"          = ","
+                  - "serialization.format" = ","
+                } -> null
+              - serialization_library = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe" -> null
+            }
+        }
+    }
+
+  # aws_s3_bucket.datos will be destroyed
+  - resource "aws_s3_bucket" "datos" {
+      - arn                         = "arn:aws:s3:::de-final-entregas-aws" -> null
+      - bucket                      = "de-final-entregas-aws" -> null
+      - bucket_domain_name          = "de-final-entregas-aws.s3.amazonaws.com" -> null
+      - bucket_namespace            = "global" -> null
+      - bucket_region               = "us-east-1" -> null
+      - bucket_regional_domain_name = "de-final-entregas-aws.s3.us-east-1.amazonaws.com" -> null
+      - force_destroy               = true -> null
+      - hosted_zone_id              = "Z3AQBSTGFYJSTF" -> null
+      - id                          = "de-final-entregas-aws" -> null
+      - object_lock_enabled         = false -> null
+      - region                      = "us-east-1" -> null
+      - request_payer               = "BucketOwner" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Gestion"  = "terraform"
+          - "Proyecto" = "partition-projection-entregas"
+        } -> null
+        # (3 unchanged attributes hidden)
+
+      - grant {
+          - id          = "9cc1bd543166ebc03abbdc16903ee927a06bd957ee2b988fb4f98bea5ca58ae0" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = false -> null
+
+              - apply_server_side_encryption_by_default {
+                  - sse_algorithm     = "AES256" -> null
+                    # (1 unchanged attribute hidden)
+                }
+            }
+        }
+
+      - versioning {
+          - enabled    = false -> null
+          - mfa_delete = false -> null
+        }
+    }
+
+  # aws_s3_bucket_ownership_controls.datos will be destroyed
+  - resource "aws_s3_bucket_ownership_controls" "datos" {
+      - bucket = "de-final-entregas-aws" -> null
+      - id     = "de-final-entregas-aws" -> null
+      - region = "us-east-1" -> null
+
+      - rule {
+          - object_ownership = "BucketOwnerEnforced" -> null
+        }
+    }
+
+  # aws_s3_bucket_public_access_block.datos will be destroyed
+  - resource "aws_s3_bucket_public_access_block" "datos" {
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - bucket                  = "de-final-entregas-aws" -> null
+      - id                      = "de-final-entregas-aws" -> null
+      - ignore_public_acls      = true -> null
+      - region                  = "us-east-1" -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.datos will be destroyed
+  - resource "aws_s3_bucket_server_side_encryption_configuration" "datos" {
+      - bucket                = "de-final-entregas-aws" -> null
+      - id                    = "de-final-entregas-aws" -> null
+      - region                = "us-east-1" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - blocked_encryption_types = [
+              - "SSE-C",
+            ] -> null
+          - bucket_key_enabled       = false -> null
+
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm     = "AES256" -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+Plan: 0 to add, 0 to change, 7 to destroy.
+
+Changes to Outputs:
+  - athena_workgroup            = "wg-entregas" -> null
+  - bucket_arn                  = "arn:aws:s3:::de-final-entregas-aws" -> null
+  - bucket_nombre               = "de-final-entregas-aws" -> null
+  - glue_base_datos             = "mensajeria_entregas" -> null
+  - glue_tabla                  = "intentos_entrega" -> null
+  - rango_proyeccion            = "2026-10-01,2026-10-03" -> null
+  - region                      = "us-east-1" -> null
+  - tabla_completa              = "mensajeria_entregas.intentos_entrega" -> null
+  - ubicacion_entregas          = "s3://de-final-entregas-aws/entregas/" -> null
+  - ubicacion_resultados_athena = "s3://de-final-entregas-aws/resultados-athena/" -> null
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: 
+aws_s3_bucket_public_access_block.datos: Destroying... [id=de-final-entregas-aws]
+aws_s3_bucket_ownership_controls.datos: Destroying... [id=de-final-entregas-aws]
+aws_s3_bucket_server_side_encryption_configuration.datos: Destroying... [id=de-final-entregas-aws]
+aws_athena_workgroup.entregas: Destroying... [id=wg-entregas]
+aws_glue_catalog_table.entregas: Destroying... [id=573992724610:mensajeria_entregas:intentos_entrega]
+aws_athena_workgroup.entregas: Destruction complete after 1s
+aws_s3_bucket_server_side_encryption_configuration.datos: Destruction complete after 1s
+aws_s3_bucket_ownership_controls.datos: Destruction complete after 1s
+aws_glue_catalog_table.entregas: Destruction complete after 1s
+aws_glue_catalog_database.entregas: Destroying... [id=573992724610:mensajeria_entregas]
+aws_s3_bucket_public_access_block.datos: Destruction complete after 1s
+aws_s3_bucket.datos: Destroying... [id=de-final-entregas-aws]
+aws_glue_catalog_database.entregas: Destruction complete after 0s
+aws_s3_bucket.datos: Destruction complete after 1s
+
+Destroy complete! Resources: 7 destroyed.

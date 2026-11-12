@@ -1,0 +1,52 @@
+{
+  "athena_workgroup": {
+    "sensitive": false,
+    "type": "string",
+    "value": "wg-entregas"
+  },
+  "bucket_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:s3:::de-final-entregas-aws"
+  },
+  "bucket_nombre": {
+    "sensitive": false,
+    "type": "string",
+    "value": "de-final-entregas-aws"
+  },
+  "glue_base_datos": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mensajeria_entregas"
+  },
+  "glue_tabla": {
+    "sensitive": false,
+    "type": "string",
+    "value": "intentos_entrega"
+  },
+  "rango_proyeccion": {
+    "sensitive": false,
+    "type": "string",
+    "value": "2026-10-01,2026-10-03"
+  },
+  "region": {
+    "sensitive": false,
+    "type": "string",
+    "value": "us-east-1"
+  },
+  "tabla_completa": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mensajeria_entregas.intentos_entrega"
+  },
+  "ubicacion_entregas": {
+    "sensitive": false,
+    "type": "string",
+    "value": "s3://de-final-entregas-aws/entregas/"
+  },
+  "ubicacion_resultados_athena": {
+    "sensitive": false,
+    "type": "string",
+    "value": "s3://de-final-entregas-aws/resultados-athena/"
+  }
+}

@@ -1,0 +1,67 @@
+aws_glue_catalog_database.entregas: Refreshing state... [id=573992724610:mensajeria_entregas]
+aws_s3_bucket.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_ownership_controls.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_public_access_block.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_s3_bucket_server_side_encryption_configuration.datos: Refreshing state... [id=de-final-entregas-aws]
+aws_glue_catalog_table.entregas: Refreshing state... [id=573992724610:mensajeria_entregas:intentos_entrega]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_athena_workgroup.entregas will be created
+  + resource "aws_athena_workgroup" "entregas" {
+      + arn           = (known after apply)
+      + description   = "Workgroup para las consultas del ejercicio de entregas"
+      + force_destroy = true
+      + id            = (known after apply)
+      + name          = "wg-entregas"
+      + region        = "us-east-1"
+      + state         = "ENABLED"
+      + tags_all      = {
+          + "Gestion"  = "terraform"
+          + "Proyecto" = "partition-projection-entregas"
+        }
+
+      + configuration {
+          + enable_minimum_encryption_configuration = (known after apply)
+          + enforce_workgroup_configuration         = true
+          + publish_cloudwatch_metrics_enabled      = true
+          + requester_pays_enabled                  = false
+
+          + result_configuration {
+              + output_location = "s3://de-final-entregas-aws/resultados-athena/"
+
+              + encryption_configuration {
+                  + encryption_option = "SSE_S3"
+                }
+            }
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: 
+aws_athena_workgroup.entregas: Creating...
+aws_athena_workgroup.entregas: Creation complete after 1s [id=wg-entregas]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+athena_workgroup = "wg-entregas"
+bucket_arn = "arn:aws:s3:::de-final-entregas-aws"
+bucket_nombre = "de-final-entregas-aws"
+glue_base_datos = "mensajeria_entregas"
+glue_tabla = "intentos_entrega"
+rango_proyeccion = "2026-10-01,2026-10-03"
+region = "us-east-1"
+tabla_completa = "mensajeria_entregas.intentos_entrega"
+ubicacion_entregas = "s3://de-final-entregas-aws/entregas/"
+ubicacion_resultados_athena = "s3://de-final-entregas-aws/resultados-athena/"
